@@ -3,7 +3,7 @@ SHELL := /bin/bash
 test:
 	go test ./
 
-VERSION:=0.0.1
+VERSION := $(shell cat VERSION | tr -d '\n')
 push-tag:
 	git tag v$(VERSION)
 	git push origin v$(VERSION)

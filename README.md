@@ -6,7 +6,8 @@ Graceful shutdown helper for long running executable go program
 ``` go
 triggerCtx, triggerFn := context.WithCancel(context.Background())
 // calling triggerFn() will trigger graceful shutdown manually instead of
-// waiting for SIGINT, SIGTERM or SIGHUP
+// waiting for syscall signal: SIGINT, SIGTERM, SIGHUP or SIGKILL
+// if you don't need this feature, just pass context.Background() to GracefulShutdown
 
 // Setup your program resources here, e.g. http server, database connection, etc.
 
