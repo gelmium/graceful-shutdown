@@ -10,11 +10,11 @@ import (
 	"time"
 )
 
-// operation is a clean up function on shutting down
-type operation func(ctx context.Context) error
+// Operation is a clean up function on shutting down
+type Operation func(ctx context.Context) error
 
 // gracefulShutdown waits for termination syscalls and doing clean up operations after received it
-func GracefulShutdown(triggerCtx context.Context, timeout time.Duration, ops map[string]operation) <-chan int {
+func GracefulShutdown(triggerCtx context.Context, timeout time.Duration, ops map[string]Operation) <-chan int {
 	shutdownContext, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	wait := make(chan int)
