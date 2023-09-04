@@ -19,7 +19,7 @@ func TestGracefulShutdown(t *testing.T) {
 	}
 
 	// Define a map of operations to be passed to GracefulShutdown
-	ops := map[string]operation{
+	ops := map[string]Operation{
 		"op1": mockOp,
 		"op2": mockOp,
 	}
@@ -51,7 +51,7 @@ func TestGracefulShutdownWithError(t *testing.T) {
 	}
 
 	// Define a map of operations to be passed to GracefulShutdown
-	ops := map[string]operation{
+	ops := map[string]Operation{
 		"op1": mockOp,
 	}
 
@@ -88,7 +88,7 @@ func TestGracefulShutdownWithTimeout(t *testing.T) {
 	}
 
 	// Define a map of operations to be passed to GracefulShutdown
-	ops := map[string]operation{
+	ops := map[string]Operation{
 		"op1": mockOp,
 	}
 
@@ -124,7 +124,7 @@ func TestGracefulShutdownWithTimeoutForceExit(t *testing.T) {
 	}
 
 	// Define a map of operations to be passed to GracefulShutdown
-	ops := map[string]operation{
+	ops := map[string]Operation{
 		"op1": mockOp,
 	}
 
