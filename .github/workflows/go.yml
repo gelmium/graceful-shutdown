@@ -40,4 +40,13 @@ jobs:
       run: make push-tag
 
     - name: Publish
-      run: make publish
+      run: make publish-version
+
+    - name: Bump version
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        make echo-version bump-version
+        [ $? -eq 0 ] && make .ci-helper-gh-bump-version-commit-with-pr
+        [ $? -eq 0 ] && make .ci-helper-gh-auto-merge-pr-of-branch GH_BRANCH=`cat .ci-helper-gh-bump-version-commit-with-pr`
+        
