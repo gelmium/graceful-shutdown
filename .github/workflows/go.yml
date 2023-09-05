@@ -24,7 +24,7 @@ jobs:
     - name: Test
       run: make test
 
-  publish: # this step only run on PR to main branch
+  pre-release: # this step only run on PR to main branch
     needs: test
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
