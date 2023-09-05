@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  test:
+  test: # this step run on any push or PR to allowed branches
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -23,6 +23,21 @@ jobs:
         
     - name: Test
       run: make test
+
+  pre-release: # this step only run on PR to allowed branches
+    needs: test
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version-file: 'go.mod'
+    
+    - name: Pre-release
+      run: make publish-prerelease PRERELEASE_PREFIX=beta
   
   publish: # this step only run on push to main branch
     needs: test
@@ -37,9 +52,9 @@ jobs:
         go-version-file: 'go.mod'
     
     - name: Create tag
-      run: make push-tag
+      run: make overwrite-tag
 
-    - name: Publish
+    - name: Publish version
       run: make publish-version
 
     - name: Bump version
