@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  test:
+  test: # this step run on any push or PR to allowed branches
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -24,9 +24,9 @@ jobs:
     - name: Test
       run: make test
 
-  pre-release: # this step only run on PR to main branch
+  pre-release: # this step only run on PR to allowed branches
     needs: test
-    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
