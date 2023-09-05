@@ -26,6 +26,9 @@ BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 SOURCE_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 SOURCE_COMMIT ?= $(shell git rev-parse --verify HEAD)
 SHORT_COMMIT := $(shell v='$(SOURCE_COMMIT)'; echo "$${v::7}")
+.ci-helper-git-config-user:
+	git config user.name "$(shell git log -n 1 --pretty=format:%an)"
+	git config user.email "$(shell git log -n 1 --pretty=format:%ae)"
 .ci-helper-gh-bump-version-commit-with-pr:
 	git checkout -b bump/v$(NEW_VERSION)
 	git commit -m "AUTOBUMP-$(NEW_VERSION) [skip ci]"
