@@ -41,5 +41,5 @@ SHORT_COMMIT := $(shell v='$(SOURCE_COMMIT)'; echo "$${v::7}")
 GH_BRANCH ?= $(SOURCE_BRANCH)
 .ci-helper-gh-auto-merge-pr-of-branch:
 	echo "Approve and Merge the submitted PR automatically"
-	gh pr review $(GH_BRANCH) --approve
+	# TODO: gh pr review $(GH_BRANCH) --approve
 	gh pr merge $(GH_BRANCH) --auto -d -s
