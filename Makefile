@@ -20,6 +20,7 @@ echo-version:
 	@echo "Prerelease version: $(PRERELEASE_VERSION)"
 bump-version:
 	echo -n $(NEW_VERSION) > VERSION
+	git add VERSION
 
 BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 # if env not availlable then try to use git to find out
