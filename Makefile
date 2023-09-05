@@ -12,8 +12,8 @@ publish-version:
 	GOPROXY=proxy.golang.org go list -m github.com/gelmium/graceful-shutdown@v$(VERSION)
 
 # NEW_VERSION is the next patch version
-NEW_VERSION = $(shell echo $(VERSION) | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g')
-PRERELEASE_VERSION = $(NEW_VERSION)-$(shell git rev-parse --short HEAD)
+NEW_VERSION := $(shell echo $(VERSION) | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g')
+PRERELEASE_VERSION := $(NEW_VERSION)-$(shell git rev-parse --short HEAD)
 echo-version:
 	@echo "Current version: $(VERSION)"
 	@echo "New version: $(NEW_VERSION)"
@@ -32,6 +32,7 @@ SHORT_COMMIT := $(shell v='$(SOURCE_COMMIT)'; echo "$${v::7}")
 	git config user.email "$(shell git log -n 1 --pretty=format:%ae)"
 .ci-helper-gh-bump-version-commit-with-pr:
 	git checkout -b bump/v$(NEW_VERSION)
+	make bump-version
 	git commit -m "AUTOBUMP-$(NEW_VERSION) [skip ci]"
 	git push origin bump/v$(NEW_VERSION)
 	echo "Create new PR to bump version"

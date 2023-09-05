@@ -46,7 +46,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        make echo-version bump-version .ci-helper-git-config-user
+        make echo-version .ci-helper-git-config-user
         [ $? -eq 0 ] && make .ci-helper-gh-bump-version-commit-with-pr
         [ $? -eq 0 ] && make .ci-helper-gh-auto-merge-pr-of-branch GH_BRANCH=`cat .ci-helper-gh-bump-version-commit-with-pr`
         
