@@ -7,13 +7,17 @@ VERSION := $(shell cat VERSION | tr -d '\n')
 push-tag:
 	git tag v$(VERSION)
 	git push origin v$(VERSION)
+overwrite-tag:
+	git tag -f v$(VERSION)
+	git push origin --tags
 
 publish-version:
 	GOPROXY=proxy.golang.org go list -m github.com/gelmium/graceful-shutdown@v$(VERSION)
 
 # NEW_VERSION is the next patch version
 NEW_VERSION := $(shell echo $(VERSION) | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g')
-PRERELEASE_VERSION := $(NEW_VERSION)-$(shell git rev-parse --short HEAD)
+PRERELEASE_PREFIX := alpha
+PRERELEASE_VERSION := $(VERSION)-$(PRERELEASE_PREFIX).$(shell git rev-parse --short HEAD)
 echo-version:
 	@echo "Current version: $(VERSION)"
 	@echo "New version: $(NEW_VERSION)"
@@ -21,7 +25,10 @@ echo-version:
 bump-version:
 	echo -n $(NEW_VERSION) > VERSION
 	git add VERSION
-
+publish-prerelease:
+	make push-tag VERSION=$(PRERELEASE_VERSION)
+	make publish-version VERSION=$(PRERELEASE_VERSION)
+	
 BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 # if env not availlable then try to use git to find out
 SOURCE_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
@@ -41,5 +48,5 @@ SHORT_COMMIT := $(shell v='$(SOURCE_COMMIT)'; echo "$${v::7}")
 GH_BRANCH ?= $(SOURCE_BRANCH)
 .ci-helper-gh-auto-merge-pr-of-branch:
 	echo "Approve and Merge the submitted PR automatically"
-	# TODO: gh pr review $(GH_BRANCH) --approve
+	# TODO, if main require review you will need to approve the PR with an user token: gh pr review $(GH_BRANCH) --approve
 	gh pr merge $(GH_BRANCH) --auto -d -s
