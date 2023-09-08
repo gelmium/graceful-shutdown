@@ -10,7 +10,7 @@ import (
 )
 
 func TestGracefulShutdown(t *testing.T) {
-	// Define a mock operation that waits for a specified duration before returning
+	// Define a mock operation that waits for a specified duration before returning.
 	mockOp := func(ctx context.Context) error {
 		select {
 		case <-ctx.Done():
@@ -20,24 +20,24 @@ func TestGracefulShutdown(t *testing.T) {
 		}
 	}
 
-	// Define a map of operations to be passed to GracefulShutdown
+	// Define a map of operations to be passed to GracefulShutdown.
 	ops := map[string]gfshutdown.Operation{
 		"op1": mockOp,
 		"op2": mockOp,
 	}
 
-	// Define a timeout for the GracefulShutdown function
+	// Define a timeout for the GracefulShutdown function.
 	timeout := 1 * time.Second
 
-	// Call GracefulShutdown with a trigger context that is immediately cancelled
+	// Call GracefulShutdown with a trigger context that is immediately cancelled.
 	triggerCtx, cancel := context.WithCancel(context.Background())
 	cancel()
 	wait := gfshutdown.GracefulShutdown(triggerCtx, timeout, ops)
 
-	// Ensure that the function waits for all operations to complete before returning
+	// Ensure that the function waits for all operations to complete before returning.
 	select {
 	case r := <-wait:
-		// Waited for all operations to complete
+		// Waited for all operations to complete.
 		if r != 0 {
 			t.Error("GracefulShutdown did not exit gracefully")
 		}
@@ -47,25 +47,25 @@ func TestGracefulShutdown(t *testing.T) {
 }
 
 func TestGracefulShutdownWithError(t *testing.T) {
-	// Define a mock operation that returns an error
+	// Define a mock operation that returns an error.
 	mockOp := func(ctx context.Context) error {
 		return errors.New("operation failed")
 	}
 
-	// Define a map of operations to be passed to GracefulShutdown
+	// Define a map of operations to be passed to GracefulShutdown.
 	ops := map[string]gfshutdown.Operation{
 		"op1": mockOp,
 	}
 
-	// Define a timeout for the GracefulShutdown function
+	// Define a timeout for the GracefulShutdown function.
 	timeout := 1 * time.Second
 
-	// Call GracefulShutdown with a trigger context that is immediately cancelled
+	// Call GracefulShutdown with a trigger context that is immediately cancelled.
 	triggerCtx, cancel := context.WithCancel(context.Background())
 	cancel()
 	wait := gfshutdown.GracefulShutdown(triggerCtx, timeout, ops)
 
-	// Ensure that the function waits for all operations to complete before returning
+	// Ensure that the function waits for all operations to complete before returning.
 	select {
 	case r := <-wait:
 		// Waited for all operations to complete
@@ -77,9 +77,9 @@ func TestGracefulShutdownWithError(t *testing.T) {
 	}
 }
 
-// Add a test case with timeout
+// Add a test case with timeout.
 func TestGracefulShutdownWithTimeout(t *testing.T) {
-	// Define a mock operation that waits for a specified duration before returning
+	// Define a mock operation that waits for a specified duration before returning.
 	mockOp := func(ctx context.Context) error {
 		select {
 		case <-ctx.Done():
@@ -89,43 +89,41 @@ func TestGracefulShutdownWithTimeout(t *testing.T) {
 		}
 	}
 
-	// Define a map of operations to be passed to GracefulShutdown
+	// Define a map of operations to be passed to GracefulShutdown.
 	ops := map[string]gfshutdown.Operation{
 		"op1": mockOp,
 	}
 
-	// Define a timeout for the GracefulShutdown function
+	// Define a timeout for the GracefulShutdown function.
 	timeout := 1 * time.Second
 
-	// Call GracefulShutdown with a trigger context that is immediately cancelled
+	// Call GracefulShutdown with a trigger context that is immediately cancelled.
 	triggerCtx, cancel := context.WithCancel(context.Background())
 	cancel()
 	wait := gfshutdown.GracefulShutdown(triggerCtx, timeout, ops)
 
-	// Ensure that the function waits for all operations to complete before returning
+	// Ensure that the function waits for all operations to complete before returning.
 	select {
 	case r := <-wait:
-		// Gracefully shutdown exit before 2 seconds
+		// Gracefully shutdown exit before 2 seconds.
 		if r != 0 {
 			t.Error("GracefulShutdown did not exit gracefully")
 		}
 		break
 	case <-time.After(2 * time.Second):
-		// Waited for all operations to complete
+		// Waited for all operations to complete.
 		t.Error("GracefulShutdown did not timeout but instead wait for all operations to complete")
 	}
 }
 
 func TestGracefulShutdownWithTimeoutForceExit(t *testing.T) {
-	// Define a mock operation that waits for a specified duration before returning
+	// Define a mock operation that waits for a specified duration before returning.
 	mockOp := func(ctx context.Context) error {
-		select {
-		case <-time.After(2 * time.Second):
-			return nil
-		}
+		<-time.After(2 * time.Second)
+		return nil
 	}
 
-	// Define a map of operations to be passed to GracefulShutdown
+	// Define a map of operations to be passed to GracefulShutdown.
 	ops := map[string]gfshutdown.Operation{
 		"op1": mockOp,
 	}
