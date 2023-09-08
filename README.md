@@ -1,6 +1,7 @@
 # graceful-shutdown
 Graceful shutdown helper for long running executable go program
 
+[![go.yml<main>](https://github.com/gelmium/graceful-shutdown/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/gelmium/graceful-shutdown/actions/workflows/go.yml)
 
 # Usage
 ``` go

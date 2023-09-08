@@ -10,10 +10,10 @@ import (
 	"time"
 )
 
-// Operation is a clean up function on shutting down
+// Operation is a clean up function on shutting down.
 type Operation func(ctx context.Context) error
 
-// gracefulShutdown waits for termination syscalls and doing clean up operations after received it
+// gracefulShutdown waits for termination syscalls and doing clean up operations after received it.
 func GracefulShutdown(triggerCtx context.Context, timeout time.Duration, ops map[string]Operation) <-chan int {
 	shutdownContext, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
@@ -21,9 +21,9 @@ func GracefulShutdown(triggerCtx context.Context, timeout time.Duration, ops map
 	go func() {
 		s := make(chan os.Signal, 1)
 
-		// these syscalls signal will trigger graceful shutdown
-		signal.Notify(s, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP, syscall.SIGKILL)
-		// wait from both triggerCtx.Done and syscall s chanel
+		// these syscalls signal will trigger graceful shutdown.
+		signal.Notify(s, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+		// wait from both triggerCtx.Done and syscall s chanel.
 		select {
 		case <-triggerCtx.Done():
 			log.Println("graceful shutdown is triggered within process")
@@ -33,7 +33,7 @@ func GracefulShutdown(triggerCtx context.Context, timeout time.Duration, ops map
 
 		log.Println("Shutting down...")
 
-		// set timeout for the ops to be done to prevent system hang
+		// set timeout for the ops to be done to prevent system hang.
 		timeoutFunc := time.AfterFunc(timeout, func() {
 			log.Printf("timeout %d ms has been elapsed, force exit", timeout.Milliseconds())
 			wait <- 1
@@ -44,7 +44,7 @@ func GracefulShutdown(triggerCtx context.Context, timeout time.Duration, ops map
 
 		var wg sync.WaitGroup
 
-		// Do the operations asynchronously to save time
+		// Do the operations asynchronously to save time.
 		for key, op := range ops {
 			wg.Add(1)
 			innerOp := op
