@@ -46,6 +46,7 @@
         "GitHub.copilot",
         "GitHub.copilot-labs",
         "GitHub.copilot-chat",
+        "github.vscode-github-actions" ,
         "golang.Go"
       ],
       "settings": {

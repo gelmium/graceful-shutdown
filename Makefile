@@ -3,6 +3,9 @@ SHELL := /bin/bash
 test:
 	go test ./
 
+golangci-lint:
+	docker run -it --rm -v "$$PWD":/app -w /app golangci/golangci-lint:latest golangci-lint run -v
+
 VERSION := $(shell cat VERSION | tr -d '\n')
 push-tag:
 	git tag v$(VERSION)
