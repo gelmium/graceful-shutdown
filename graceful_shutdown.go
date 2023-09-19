@@ -47,19 +47,15 @@ func GracefulShutdown(triggerCtx context.Context, timeout time.Duration, ops map
 		// Do the operations asynchronously to save time.
 		for key, op := range ops {
 			wg.Add(1)
-			innerOp := op
-			innerKey := key
-			go func() {
+			go func(innerKey string, innerOp Operation) {
 				defer wg.Done()
-
 				log.Printf("cleaning up: %s", innerKey)
 				if err := innerOp(shutdownContext); err != nil {
 					log.Printf("%s: clean up failed: %s", innerKey, err.Error())
 					return
 				}
-
 				log.Printf("%s was shutdown gracefully", innerKey)
-			}()
+			}(key, op)
 		}
 
 		wg.Wait()
