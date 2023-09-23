@@ -78,13 +78,13 @@ func TestGracefulShutdownWithError(t *testing.T) {
 }
 
 // Add a test case with timeout.
-func TestGracefulShutdownWithTimeout(t *testing.T) {
+func TestGracefulShutdownWithTimeoutInTime(t *testing.T) {
 	// Define a mock operation that waits for a specified duration before returning.
 	mockOp := func(ctx context.Context) error {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
-		case <-time.After(2 * time.Second):
+		case <-time.After(900 * time.Millisecond):
 			return nil
 		}
 	}
@@ -105,7 +105,7 @@ func TestGracefulShutdownWithTimeout(t *testing.T) {
 	// Ensure that the function waits for all operations to complete before returning.
 	select {
 	case r := <-wait:
-		// Gracefully shutdown exit before 2 seconds.
+		// Gracefully shutdown before 1 seconds timeout.
 		if r != 0 {
 			t.Error("GracefulShutdown did not exit gracefully")
 		}
@@ -116,7 +116,7 @@ func TestGracefulShutdownWithTimeout(t *testing.T) {
 	}
 }
 
-func TestGracefulShutdownWithTimeoutForceExit(t *testing.T) {
+func TestGracefulShutdownWithTimeoutTimedOut(t *testing.T) {
 	// Define a mock operation that waits for a specified duration before returning.
 	mockOp := func(ctx context.Context) error {
 		<-time.After(2 * time.Second)
@@ -139,7 +139,7 @@ func TestGracefulShutdownWithTimeoutForceExit(t *testing.T) {
 	// Ensure that the function waits for all operations to complete before returning
 	select {
 	case r := <-wait:
-		// Process did not force exit
+		// GracefulShutdown did not timed out to force exit
 		if r != 1 {
 			t.Error("GracefulShutdown did not time out")
 		}
