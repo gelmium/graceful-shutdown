@@ -15,7 +15,6 @@ type Operation func(ctx context.Context) error
 
 // gracefulShutdown waits for termination syscalls and doing clean up operations after received it.
 func GracefulShutdown(triggerCtx context.Context, timeout time.Duration, ops map[string]Operation) <-chan int {
-	shutdownContext, cancelFn := context.WithTimeout(context.Background(), timeout)
 	wait := make(chan int)
 	go func() {
 		s := make(chan os.Signal, 1)
@@ -31,7 +30,7 @@ func GracefulShutdown(triggerCtx context.Context, timeout time.Duration, ops map
 		}
 
 		log.Println("Shutting down...")
-
+		shutdownContext, cancelFn := context.WithTimeout(context.Background(), timeout)
 		// set timeout for the ops to be done to prevent system hang.
 		timeoutFunc := time.AfterFunc(timeout, func() {
 			log.Printf("timeout %d ms has been elapsed, force exit", timeout.Milliseconds())
